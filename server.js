@@ -7,47 +7,24 @@ const path = require("path");
 
 const app = express();
 
-/* =========================================================
-   MIDDLEWARE
-========================================================= */
-
-// Allow requests from your website
 app.use(cors());
-
-// Allow JSON data from forms
 app.use(express.json());
 
-// Serve your HTML, CSS, JavaScript, images and other website files
 app.use(
     express.static(__dirname, {
         dotfiles: "deny"
     })
 );
 
-
-/* =========================================================
-   ENVIRONMENT VARIABLES
-========================================================= */
-
 if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
 
     console.error("");
-    console.error("=======================================");
     console.error("EMAIL CONFIGURATION ERROR");
-    console.error("=======================================");
     console.error("EMAIL_USER or EMAIL_PASS is missing.");
-    console.error("Please add them to your .env file locally");
-    console.error("or to Render Environment Variables.");
-    console.error("=======================================");
     console.error("");
 
     process.exit(1);
 }
-
-
-/* =========================================================
-   EMAIL TRANSPORTER
-========================================================= */
 
 const transporter = nodemailer.createTransport({
 
@@ -60,41 +37,25 @@ const transporter = nodemailer.createTransport({
 
 });
 
-
-/* =========================================================
-   VERIFY EMAIL CONNECTION
-========================================================= */
-
 transporter.verify((error) => {
 
     if (error) {
 
         console.error("");
-        console.error("=======================================");
         console.error("GMAIL CONNECTION FAILED");
-        console.error("=======================================");
         console.error(error.message);
-        console.error("=======================================");
         console.error("");
 
     } else {
 
         console.log("");
-        console.log("=======================================");
         console.log("GMAIL CONNECTED SUCCESSFULLY");
-        console.log("=======================================");
         console.log("");
 
     }
 
 });
 
-
-/* =========================================================
-   WEBSITE HOME PAGE
-========================================================= */
-
-// Open the actual website when visiting the Render URL
 app.get("/", (req, res) => {
 
     res.sendFile(
@@ -107,11 +68,6 @@ app.get("/", (req, res) => {
 
 });
 
-
-/* =========================================================
-   HEALTH CHECK
-========================================================= */
-
 app.get("/health", (req, res) => {
 
     res.status(200).json({
@@ -121,17 +77,11 @@ app.get("/health", (req, res) => {
 
 });
 
-
-/* =========================================================
-   BOOKING ROUTE
-========================================================= */
-
 app.post("/book", async (req, res) => {
 
     console.log("");
-    console.log("=======================================");
     console.log("NEW BOOKING REQUEST");
-    console.log("=======================================");
+    console.log("");
 
     try {
 
@@ -143,11 +93,6 @@ app.post("/book", async (req, res) => {
             service,
             date
         } = req.body;
-
-
-        /* =====================================================
-           VALIDATION
-        ===================================================== */
 
         if (
             !firstName ||
@@ -169,11 +114,6 @@ app.post("/book", async (req, res) => {
 
         }
 
-
-        /* =====================================================
-           BASIC EMAIL VALIDATION
-        ===================================================== */
-
         const emailPattern =
             /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -190,18 +130,12 @@ app.post("/book", async (req, res) => {
 
         }
 
-
-        /* =====================================================
-           CREATE BOOKING REFERENCE
-        ===================================================== */
-
         const bookingReference =
             "BBS-" +
             Math.floor(
                 100000 +
                 Math.random() * 900000
             );
-
 
         console.log(
             "Booking Reference:",
@@ -223,16 +157,6 @@ app.post("/book", async (req, res) => {
             "Date:",
             date
         );
-
-
-        /* =====================================================
-           CUSTOMER CONFIRMATION EMAIL
-        ===================================================== */
-
-        console.log(
-            "Sending confirmation email to customer..."
-        );
-
 
         await transporter.sendMail({
 
@@ -337,20 +261,9 @@ app.post("/book", async (req, res) => {
 
         });
 
-
         console.log(
             "Customer confirmation email sent successfully."
         );
-
-
-        /* =====================================================
-           SALON OWNER EMAIL
-        ===================================================== */
-
-        console.log(
-            "Sending booking notification to salon..."
-        );
-
 
         await transporter.sendMail({
 
@@ -430,20 +343,13 @@ app.post("/book", async (req, res) => {
 
         });
 
-
         console.log(
             "Salon notification email sent successfully."
         );
 
-
-        /* =====================================================
-           SUCCESS RESPONSE
-        ===================================================== */
-
         console.log("");
         console.log("BOOKING COMPLETED SUCCESSFULLY");
         console.log("");
-
 
         return res.status(200).json({
 
@@ -457,21 +363,12 @@ app.post("/book", async (req, res) => {
 
         });
 
-
     } catch (error) {
 
-        /* =====================================================
-           ERROR HANDLING
-        ===================================================== */
-
         console.error("");
-        console.error("=======================================");
         console.error("BOOKING ERROR");
-        console.error("=======================================");
         console.error(error);
-        console.error("=======================================");
         console.error("");
-
 
         return res.status(500).json({
 
@@ -486,14 +383,8 @@ app.post("/book", async (req, res) => {
 
 });
 
-
-/* =========================================================
-   START SERVER
-========================================================= */
-
 const PORT =
     process.env.PORT || 3000;
-
 
 app.listen(
     PORT,
@@ -501,23 +392,17 @@ app.listen(
     () => {
 
         console.log("");
-        console.log("=======================================");
-        console.log(" BEAUTY BEEZ STUDIO SERVER");
-        console.log("=======================================");
-
+        console.log("BEAUTY BEEZ STUDIO SERVER");
+        console.log("");
         console.log(
             `Server running on port ${PORT}`
         );
-
         console.log(
             "Website files are being served."
         );
-
         console.log(
             "Waiting for bookings..."
         );
-
-        console.log("=======================================");
         console.log("");
 
     }
