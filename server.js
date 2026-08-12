@@ -12,52 +12,38 @@ app.use(express.json());
 
 app.use(
     express.static(__dirname, {
-        dotfiles: "deny"
+        dotfiles: "deny",
+        extensions: ["html"]
     })
 );
 
 if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
-
-    console.error("");
     console.error("EMAIL CONFIGURATION ERROR");
     console.error("EMAIL_USER or EMAIL_PASS is missing.");
-    console.error("");
-
     process.exit(1);
 }
 
 const transporter = nodemailer.createTransport({
-
-    service: "gmail",
-
+    host: "smtp.gmail.com",
+    port: 587,
+    secure: false,
+    family: 4,
     auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS
     }
-
 });
 
 transporter.verify((error) => {
-
     if (error) {
-
-        console.error("");
         console.error("GMAIL CONNECTION FAILED");
         console.error(error.message);
-        console.error("");
-
     } else {
-
-        console.log("");
         console.log("GMAIL CONNECTED SUCCESSFULLY");
-        console.log("");
-
     }
-
 });
 
 app.get("/", (req, res) => {
-
     res.sendFile(
         path.join(
             __dirname,
@@ -65,26 +51,89 @@ app.get("/", (req, res) => {
             "Homepage.html"
         )
     );
-
 });
 
 app.get("/health", (req, res) => {
-
     res.status(200).json({
         success: true,
         message: "Beauty Beez Studio server is running."
     });
+});
 
+app.get("/booking", (req, res) => {
+    res.sendFile(
+        path.join(
+            __dirname,
+            "Booking page",
+            "Booking.html"
+        )
+    );
+});
+
+app.get("/services", (req, res) => {
+    res.sendFile(
+        path.join(
+            __dirname,
+            "Services & Pricing page",
+            "Services & Pricing.html"
+        )
+    );
+});
+
+app.get("/gallery", (req, res) => {
+    res.sendFile(
+        path.join(
+            __dirname,
+            "Gallery page",
+            "Gallery.html"
+        )
+    );
+});
+
+app.get("/about", (req, res) => {
+    res.sendFile(
+        path.join(
+            __dirname,
+            "About me page",
+            "About me.html"
+        )
+    );
+});
+
+app.get("/reviews", (req, res) => {
+    res.sendFile(
+        path.join(
+            __dirname,
+            "Reviews page",
+            "Reviews.html"
+        )
+    );
+});
+
+app.get("/contact", (req, res) => {
+    res.sendFile(
+        path.join(
+            __dirname,
+            "Contact us page",
+            "Contact us.html"
+        )
+    );
+});
+
+app.get("/faqs", (req, res) => {
+    res.sendFile(
+        path.join(
+            __dirname,
+            "FAQ's page",
+            "FAQ'S.html"
+        )
+    );
 });
 
 app.post("/book", async (req, res) => {
-
-    console.log("");
     console.log("NEW BOOKING REQUEST");
-    console.log("");
 
     try {
-
         const {
             firstName,
             lastName,
@@ -102,32 +151,20 @@ app.post("/book", async (req, res) => {
             !service ||
             !date
         ) {
-
             return res.status(400).json({
-
                 success: false,
-
-                message:
-                    "Please complete all booking fields."
-
+                message: "Please complete all booking fields."
             });
-
         }
 
         const emailPattern =
             /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
         if (!emailPattern.test(email)) {
-
             return res.status(400).json({
-
                 success: false,
-
-                message:
-                    "Please enter a valid email address."
-
+                message: "Please enter a valid email address."
             });
-
         }
 
         const bookingReference =
@@ -137,39 +174,18 @@ app.post("/book", async (req, res) => {
                 Math.random() * 900000
             );
 
-        console.log(
-            "Booking Reference:",
-            bookingReference
-        );
-
-        console.log(
-            "Customer:",
-            firstName,
-            lastName
-        );
-
-        console.log(
-            "Service:",
-            service
-        );
-
-        console.log(
-            "Date:",
-            date
-        );
+        console.log("Booking Reference:", bookingReference);
+        console.log("Customer:", firstName, lastName);
+        console.log("Service:", service);
+        console.log("Date:", date);
 
         await transporter.sendMail({
-
             from:
                 `"Beauty Beez Studio" <${process.env.EMAIL_USER}>`,
-
             to: email,
-
             subject:
                 "Booking Confirmation | Beauty Beez Studio",
-
             html: `
-
                 <div style="
                     max-width:650px;
                     margin:auto;
@@ -180,14 +196,12 @@ app.post("/book", async (req, res) => {
                     color:#333;
                 ">
 
-                    <h1 style="
-                        color:#8c8c8c;
-                    ">
+                    <h1 style="color:#8c8c8c;">
                         Beauty Beez Studio
                     </h1>
 
                     <h2>
-                        Your booking has been confirmed!
+                        Your booking has been received!
                     </h2>
 
                     <p>
@@ -200,7 +214,8 @@ app.post("/book", async (req, res) => {
                     </p>
 
                     <p>
-                        Your booking has been received successfully.
+                        Your booking request has been
+                        received successfully.
                     </p>
 
                     <hr>
@@ -238,27 +253,20 @@ app.post("/book", async (req, res) => {
 
                     <p>
                         If you need to change or cancel
-                        your appointment, simply reply
-                        to this email or contact
+                        your appointment, please contact
                         Beauty Beez Studio.
                     </p>
-
-                    <br>
 
                     <p>
                         We look forward to seeing you!
                     </p>
 
-                    <h3 style="
-                        color:#8c8c8c;
-                    ">
+                    <h3 style="color:#8c8c8c;">
                         Beauty Beez Studio
                     </h3>
 
                 </div>
-
             `
-
         });
 
         console.log(
@@ -266,18 +274,13 @@ app.post("/book", async (req, res) => {
         );
 
         await transporter.sendMail({
-
             from:
                 `"Beauty Beez Studio Website" <${process.env.EMAIL_USER}>`,
-
             to:
                 process.env.EMAIL_USER,
-
             subject:
                 `New Booking - ${firstName} ${lastName}`,
-
             html: `
-
                 <div style="
                     max-width:650px;
                     margin:auto;
@@ -288,9 +291,7 @@ app.post("/book", async (req, res) => {
                     color:#333;
                 ">
 
-                    <h1 style="
-                        color:#8c8c8c;
-                    ">
+                    <h1 style="color:#8c8c8c;">
                         Beauty Beez Studio
                     </h1>
 
@@ -338,72 +339,45 @@ app.post("/book", async (req, res) => {
                     </p>
 
                 </div>
-
             `
-
         });
 
         console.log(
             "Salon notification email sent successfully."
         );
 
-        console.log("");
         console.log("BOOKING COMPLETED SUCCESSFULLY");
-        console.log("");
 
         return res.status(200).json({
-
             success: true,
-
             message:
-                "Booking confirmed! A confirmation email has been sent.",
-
+                "Booking received! A confirmation email has been sent.",
             bookingReference:
                 bookingReference
-
         });
 
     } catch (error) {
 
-        console.error("");
         console.error("BOOKING ERROR");
         console.error(error);
-        console.error("");
 
         return res.status(500).json({
-
             success: false,
-
             message:
                 "Something went wrong while processing your booking."
-
         });
-
     }
-
 });
 
-const PORT =
-    process.env.PORT || 3000;
+const PORT = process.env.PORT || 3000;
 
 app.listen(
     PORT,
     "0.0.0.0",
     () => {
-
-        console.log("");
         console.log("BEAUTY BEEZ STUDIO SERVER");
-        console.log("");
-        console.log(
-            `Server running on port ${PORT}`
-        );
-        console.log(
-            "Website files are being served."
-        );
-        console.log(
-            "Waiting for bookings..."
-        );
-        console.log("");
-
+        console.log(`Server running on port ${PORT}`);
+        console.log("Website files are being served.");
+        console.log("Waiting for bookings...");
     }
 );
