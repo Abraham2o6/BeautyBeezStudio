@@ -3,6 +3,7 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const nodemailer = require("nodemailer");
+const path = require("path");
 
 const app = express();
 
@@ -15,6 +16,13 @@ app.use(cors());
 
 // Allow JSON data from forms
 app.use(express.json());
+
+// Serve your HTML, CSS, JavaScript, images and other website files
+app.use(
+    express.static(__dirname, {
+        dotfiles: "deny"
+    })
+);
 
 
 /* =========================================================
@@ -83,14 +91,33 @@ transporter.verify((error) => {
 
 
 /* =========================================================
-   HOME / HEALTH CHECK
+   WEBSITE HOME PAGE
 ========================================================= */
 
+// Open the actual website when visiting the Render URL
 app.get("/", (req, res) => {
 
-    res.status(200).send(
-        "✅ Beauty Beez Studio booking server is running."
+    res.sendFile(
+        path.join(
+            __dirname,
+            "Homepage",
+            "Homepage.html"
+        )
     );
+
+});
+
+
+/* =========================================================
+   HEALTH CHECK
+========================================================= */
+
+app.get("/health", (req, res) => {
+
+    res.status(200).json({
+        success: true,
+        message: "Beauty Beez Studio server is running."
+    });
 
 });
 
@@ -202,7 +229,9 @@ app.post("/book", async (req, res) => {
            CUSTOMER CONFIRMATION EMAIL
         ===================================================== */
 
-        console.log("Sending confirmation email to customer...");
+        console.log(
+            "Sending confirmation email to customer..."
+        );
 
 
         await transporter.sendMail({
@@ -466,19 +495,30 @@ const PORT =
     process.env.PORT || 3000;
 
 
-app.listen(PORT, () => {
+app.listen(
+    PORT,
+    "0.0.0.0",
+    () => {
 
-    console.log("");
-    console.log("=======================================");
-    console.log(" BEAUTY BEEZ STUDIO SERVER");
-    console.log("=======================================");
-    console.log(
-        `Server running on port ${PORT}`
-    );
-    console.log(
-        "Waiting for bookings..."
-    );
-    console.log("=======================================");
-    console.log("");
+        console.log("");
+        console.log("=======================================");
+        console.log(" BEAUTY BEEZ STUDIO SERVER");
+        console.log("=======================================");
 
-});
+        console.log(
+            `Server running on port ${PORT}`
+        );
+
+        console.log(
+            "Website files are being served."
+        );
+
+        console.log(
+            "Waiting for bookings..."
+        );
+
+        console.log("=======================================");
+        console.log("");
+
+    }
+);
