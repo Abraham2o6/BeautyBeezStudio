@@ -2,24 +2,39 @@ require("dotenv").config();
 
 const express = require("express");
 const cors = require("cors");
-const nodemailer = require("nodemailer");
 const path = require("path");
+const fs = require("fs");
+const { Resend } = require("resend");
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
 
-app.get("/", (req, res) => {
-    res.redirect("/Homepage/Homepage.html");
-});
+if (!process.env.RESEND_API_KEY) {
+    console.error("EMAIL CONFIGURATION ERROR");
+    console.error("RESEND_API_KEY is missing.");
+    process.exit(1);
+}
 
-app.get("/health", (req, res) => {
-    res.status(200).json({
-        success: true,
-        message: "Beauty Beez Studio server is running."
-    });
-});
+if (!process.env.EMAIL_USER) {
+    console.error("EMAIL CONFIGURATION ERROR");
+    console.error("EMAIL_USER is missing.");
+    process.exit(1);
+}
+
+if (!process.env.RESEND_FROM) {
+    console.error("EMAIL CONFIGURATION ERROR");
+    console.error("RESEND_FROM is missing.");
+    process.exit(1);
+}
+
+const resend = new Resend(process.env.RESEND_API_KEY);
+
+const reviewsFile = path.join(
+    __dirname,
+    "Reviews.json"
+);
 
 app.use(
     express.static(__dirname, {
@@ -28,30 +43,21 @@ app.use(
     })
 );
 
-if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
-    console.error("EMAIL CONFIGURATION ERROR");
-    console.error("EMAIL_USER or EMAIL_PASS is missing.");
-    process.exit(1);
-}
-
-const transporter = nodemailer.createTransport({
-    host: "smtp.gmail.com",
-    port: 587,
-    secure: false,
-    family: 4,
-    auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS
-    }
+app.get("/", (req, res) => {
+    res.sendFile(
+        path.join(
+            __dirname,
+            "Homepage",
+            "Homepage.html"
+        )
+    );
 });
 
-transporter.verify((error) => {
-    if (error) {
-        console.error("GMAIL CONNECTION FAILED");
-        console.error(error.message);
-    } else {
-        console.log("GMAIL CONNECTED SUCCESSFULLY");
-    }
+app.get("/health", (req, res) => {
+    res.status(200).json({
+        success: true,
+        message: "Beauty Beez Studio server is running."
+    });
 });
 
 app.get("/booking", (req, res) => {
@@ -128,12 +134,23 @@ app.post("/book", async (req, res) => {
     console.log("NEW BOOKING REQUEST");
 
     try {
-        const firstName = String(req.body.firstName || "").trim();
-        const lastName = String(req.body.lastName || "").trim();
-        const phone = String(req.body.phone || "").trim();
-        const email = String(req.body.email || "").trim();
-        const service = String(req.body.service || "").trim();
-        const date = String(req.body.date || "").trim();
+        const firstName =
+            String(req.body.firstName || "").trim();
+
+        const lastName =
+            String(req.body.lastName || "").trim();
+
+        const phone =
+            String(req.body.phone || "").trim();
+
+        const email =
+            String(req.body.email || "").trim();
+
+        const service =
+            String(req.body.service || "").trim();
+
+        const date =
+            String(req.body.date || "").trim();
 
         if (
             !firstName ||
@@ -166,180 +183,236 @@ app.post("/book", async (req, res) => {
                 Math.random() * 900000
             );
 
-        console.log("Booking Reference:", bookingReference);
-        console.log("Customer:", firstName, lastName);
-        console.log("Email:", email);
-        console.log("Phone:", phone);
-        console.log("Service:", service);
-        console.log("Date:", date);
+        console.log(
+            "Booking Reference:",
+            bookingReference
+        );
 
-        await transporter.sendMail({
-            from:
-                `"Beauty Beez Studio" <${process.env.EMAIL_USER}>`,
-            to: email,
-            subject:
-                "Booking Confirmation | Beauty Beez Studio",
-            html: `
-                <div style="
-                    max-width:650px;
-                    margin:auto;
-                    padding:30px;
-                    background:#ffffff;
-                    border:1px solid #e5e5e5;
-                    font-family:Arial,sans-serif;
-                    color:#333;
-                ">
+        console.log(
+            "Customer:",
+            firstName,
+            lastName
+        );
 
-                    <h1 style="color:#8c8c8c;">
-                        Beauty Beez Studio
-                    </h1>
+        console.log(
+            "Email:",
+            email
+        );
 
-                    <h2>
-                        Your booking has been received!
-                    </h2>
+        console.log(
+            "Phone:",
+            phone
+        );
 
-                    <p>
-                        Hi <strong>${firstName}</strong>,
-                    </p>
+        console.log(
+            "Service:",
+            service
+        );
 
-                    <p>
-                        Thank you for booking with
-                        <strong>Beauty Beez Studio.</strong>
-                    </p>
+        console.log(
+            "Date:",
+            date
+        );
 
-                    <p>
-                        Your booking request has been
-                        received successfully.
-                    </p>
+        const customerEmail =
+            await resend.emails.send({
+                from: process.env.RESEND_FROM,
+                to: [email],
+                replyTo: process.env.EMAIL_USER,
+                subject:
+                    "Booking Confirmation | Beauty Beez Studio",
+                html: `
+                    <div style="
+                        max-width:650px;
+                        margin:auto;
+                        padding:30px;
+                        background:#ffffff;
+                        border:1px solid #e5e5e5;
+                        font-family:Arial,sans-serif;
+                        color:#333;
+                    ">
 
-                    <hr>
+                        <h1 style="color:#8c8c8c;">
+                            Beauty Beez Studio
+                        </h1>
 
-                    <h3>
-                        Appointment Details
-                    </h3>
+                        <h2>
+                            Your booking has been received!
+                        </h2>
 
-                    <p>
-                        <strong>Booking Reference:</strong>
-                        ${bookingReference}
-                    </p>
+                        <p>
+                            Hi <strong>${firstName}</strong>,
+                        </p>
 
-                    <p>
-                        <strong>Name:</strong>
-                        ${firstName} ${lastName}
-                    </p>
+                        <p>
+                            Thank you for booking with
+                            <strong>Beauty Beez Studio.</strong>
+                        </p>
 
-                    <p>
-                        <strong>Service:</strong>
-                        ${service}
-                    </p>
+                        <p>
+                            Your booking request has been
+                            received successfully.
+                        </p>
 
-                    <p>
-                        <strong>Date:</strong>
-                        ${date}
-                    </p>
+                        <hr>
 
-                    <p>
-                        <strong>Phone:</strong>
-                        ${phone}
-                    </p>
+                        <h3>
+                            Appointment Details
+                        </h3>
 
-                    <hr>
+                        <p>
+                            <strong>Booking Reference:</strong>
+                            ${bookingReference}
+                        </p>
 
-                    <p>
-                        If you need to change or cancel
-                        your appointment, please contact
-                        Beauty Beez Studio.
-                    </p>
+                        <p>
+                            <strong>Name:</strong>
+                            ${firstName} ${lastName}
+                        </p>
 
-                    <p>
-                        We look forward to seeing you!
-                    </p>
+                        <p>
+                            <strong>Service:</strong>
+                            ${service}
+                        </p>
 
-                    <h3 style="color:#8c8c8c;">
-                        Beauty Beez Studio
-                    </h3>
+                        <p>
+                            <strong>Date:</strong>
+                            ${date}
+                        </p>
 
-                </div>
-            `
-        });
+                        <p>
+                            <strong>Phone:</strong>
+                            ${phone}
+                        </p>
+
+                        <hr>
+
+                        <p>
+                            If you need to change or cancel
+                            your appointment, please contact
+                            Beauty Beez Studio.
+                        </p>
+
+                        <p>
+                            We look forward to seeing you!
+                        </p>
+
+                        <h3 style="color:#8c8c8c;">
+                            Beauty Beez Studio
+                        </h3>
+
+                    </div>
+                `
+            });
+
+        if (customerEmail.error) {
+            console.error(
+                "CUSTOMER EMAIL ERROR:"
+            );
+
+            console.error(
+                customerEmail.error
+            );
+
+            throw new Error(
+                customerEmail.error.message
+            );
+        }
 
         console.log(
             "Customer confirmation email sent successfully."
         );
 
-        await transporter.sendMail({
-            from:
-                `"Beauty Beez Studio Website" <${process.env.EMAIL_USER}>`,
-            to: process.env.EMAIL_USER,
-            subject:
-                `New Booking - ${firstName} ${lastName}`,
-            html: `
-                <div style="
-                    max-width:650px;
-                    margin:auto;
-                    padding:30px;
-                    background:#ffffff;
-                    border:1px solid #e5e5e5;
-                    font-family:Arial,sans-serif;
-                    color:#333;
-                ">
+        const salonEmail =
+            await resend.emails.send({
+                from: process.env.RESEND_FROM,
+                to: [process.env.EMAIL_USER],
+                replyTo: email,
+                subject:
+                    `New Booking - ${firstName} ${lastName}`,
+                html: `
+                    <div style="
+                        max-width:650px;
+                        margin:auto;
+                        padding:30px;
+                        background:#ffffff;
+                        border:1px solid #e5e5e5;
+                        font-family:Arial,sans-serif;
+                        color:#333;
+                    ">
 
-                    <h1 style="color:#8c8c8c;">
-                        Beauty Beez Studio
-                    </h1>
+                        <h1 style="color:#8c8c8c;">
+                            Beauty Beez Studio
+                        </h1>
 
-                    <h2>
-                        New Booking Received
-                    </h2>
+                        <h2>
+                            New Booking Received
+                        </h2>
 
-                    <hr>
+                        <hr>
 
-                    <p>
-                        <strong>Booking Reference:</strong>
-                        ${bookingReference}
-                    </p>
+                        <p>
+                            <strong>Booking Reference:</strong>
+                            ${bookingReference}
+                        </p>
 
-                    <p>
-                        <strong>Name:</strong>
-                        ${firstName} ${lastName}
-                    </p>
+                        <p>
+                            <strong>Name:</strong>
+                            ${firstName} ${lastName}
+                        </p>
 
-                    <p>
-                        <strong>Email:</strong>
-                        ${email}
-                    </p>
+                        <p>
+                            <strong>Email:</strong>
+                            ${email}
+                        </p>
 
-                    <p>
-                        <strong>Phone:</strong>
-                        ${phone}
-                    </p>
+                        <p>
+                            <strong>Phone:</strong>
+                            ${phone}
+                        </p>
 
-                    <p>
-                        <strong>Service:</strong>
-                        ${service}
-                    </p>
+                        <p>
+                            <strong>Service:</strong>
+                            ${service}
+                        </p>
 
-                    <p>
-                        <strong>Date:</strong>
-                        ${date}
-                    </p>
+                        <p>
+                            <strong>Date:</strong>
+                            ${date}
+                        </p>
 
-                    <hr>
+                        <hr>
 
-                    <p>
-                        This booking was submitted through
-                        the Beauty Beez Studio website.
-                    </p>
+                        <p>
+                            This booking was submitted through
+                            the Beauty Beez Studio website.
+                        </p>
 
-                </div>
-            `
-        });
+                    </div>
+                `
+            });
+
+        if (salonEmail.error) {
+            console.error(
+                "SALON EMAIL ERROR:"
+            );
+
+            console.error(
+                salonEmail.error
+            );
+
+            throw new Error(
+                salonEmail.error.message
+            );
+        }
 
         console.log(
             "Salon notification email sent successfully."
         );
 
-        console.log("BOOKING COMPLETED SUCCESSFULLY");
+        console.log(
+            "BOOKING COMPLETED SUCCESSFULLY"
+        );
 
         return res.status(200).json({
             success: true,
@@ -360,19 +433,243 @@ app.post("/book", async (req, res) => {
     }
 });
 
+const handleReview = async (req, res) => {
+    console.log("NEW REVIEW REQUEST");
+
+    try {
+        const firstName =
+            String(req.body.firstName || "").trim();
+
+        const lastName =
+            String(req.body.lastName || "").trim();
+
+        const email =
+            String(req.body.email || "").trim();
+
+        const review =
+            String(
+                req.body.review ||
+                req.body.comment ||
+                ""
+            ).trim();
+
+        const rating =
+            Number(req.body.rating);
+
+        if (
+            !firstName ||
+            !lastName ||
+            !email ||
+            !review ||
+            !rating
+        ) {
+            return res.status(400).json({
+                success: false,
+                message:
+                    "Please complete all review fields."
+            });
+        }
+
+        const emailPattern =
+            /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        if (!emailPattern.test(email)) {
+            return res.status(400).json({
+                success: false,
+                message:
+                    "Please enter a valid email address."
+            });
+        }
+
+        if (
+            rating < 1 ||
+            rating > 5
+        ) {
+            return res.status(400).json({
+                success: false,
+                message:
+                    "Please select a rating between 1 and 5."
+            });
+        }
+
+        const newReview = {
+            firstName,
+            lastName,
+            email,
+            rating,
+            review,
+            date: new Date().toISOString()
+        };
+
+        let reviews = [];
+
+        if (fs.existsSync(reviewsFile)) {
+            try {
+                const fileData =
+                    fs.readFileSync(
+                        reviewsFile,
+                        "utf8"
+                    );
+
+                reviews =
+                    JSON.parse(fileData);
+
+                if (!Array.isArray(reviews)) {
+                    reviews = [];
+                }
+
+            } catch (error) {
+                reviews = [];
+            }
+        }
+
+        reviews.push(newReview);
+
+        fs.writeFileSync(
+            reviewsFile,
+            JSON.stringify(
+                reviews,
+                null,
+                4
+            )
+        );
+
+        console.log(
+            "Review saved successfully."
+        );
+
+        const reviewEmail =
+            await resend.emails.send({
+                from: process.env.RESEND_FROM,
+                to: [process.env.EMAIL_USER],
+                replyTo: email,
+                subject:
+                    `New Review - ${firstName} ${lastName}`,
+                html: `
+                    <div style="
+                        max-width:650px;
+                        margin:auto;
+                        padding:30px;
+                        background:#ffffff;
+                        border:1px solid #e5e5e5;
+                        font-family:Arial,sans-serif;
+                        color:#333;
+                    ">
+
+                        <h1 style="color:#8c8c8c;">
+                            Beauty Beez Studio
+                        </h1>
+
+                        <h2>
+                            New Review Received
+                        </h2>
+
+                        <hr>
+
+                        <p>
+                            <strong>Name:</strong>
+                            ${firstName} ${lastName}
+                        </p>
+
+                        <p>
+                            <strong>Email:</strong>
+                            ${email}
+                        </p>
+
+                        <p>
+                            <strong>Rating:</strong>
+                            ${rating}/5
+                        </p>
+
+                        <p>
+                            <strong>Review:</strong>
+                        </p>
+
+                        <p>
+                            ${review}
+                        </p>
+
+                        <hr>
+
+                        <p>
+                            This review was submitted
+                            through the Beauty Beez Studio
+                            website.
+                        </p>
+
+                    </div>
+                `
+            });
+
+        if (reviewEmail.error) {
+            console.error(
+                "REVIEW EMAIL ERROR:"
+            );
+
+            console.error(
+                reviewEmail.error
+            );
+
+            throw new Error(
+                reviewEmail.error.message
+            );
+        }
+
+        console.log(
+            "Review notification email sent successfully."
+        );
+
+        return res.status(200).json({
+            success: true,
+            message:
+                "Review submitted successfully."
+        });
+
+    } catch (error) {
+        console.error("REVIEW ERROR");
+        console.error(error);
+
+        return res.status(500).json({
+            success: false,
+            message:
+                "Unable to submit review."
+        });
+    }
+};
+
+app.post("/review", handleReview);
+app.post("/reviews", handleReview);
+app.post("/submit-review", handleReview);
+
 app.use((req, res) => {
     res.status(404).send("Page not found.");
 });
 
-const PORT = process.env.PORT || 3000;
+const PORT =
+    process.env.PORT || 3000;
 
 app.listen(
     PORT,
     "0.0.0.0",
     () => {
-        console.log("BEAUTY BEEZ STUDIO SERVER");
-        console.log(`Server running on port ${PORT}`);
-        console.log("Website files are being served.");
-        console.log("Waiting for bookings...");
+        console.log(
+            "BEAUTY BEEZ STUDIO SERVER"
+        );
+
+        console.log(
+            `Server running on port ${PORT}`
+        );
+
+        console.log(
+            "Website files are being served."
+        );
+
+        console.log(
+            "Resend email service is enabled."
+        );
+
+        console.log(
+            "Waiting for bookings and reviews..."
+        );
     }
 );
