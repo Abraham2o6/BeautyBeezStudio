@@ -1,0 +1,296 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Great+Vibes&display=swap');
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+html,
+body{
+    width:100%;
+    min-height:100%;
+}
+
+body{
+    font-family:"Cormorant Garamond", serif;
+    background:#ffffff;
+    color:#707070;
+}
+
+
+header{
+    height:80px;
+    background:#ffffff;
+
+    display:flex;
+    justify-content:flex-end;
+    align-items:center;
+
+    padding:0 35px;
+}
+
+.header-container{
+    width:100%;
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+
+.logo{
+    font-family:"Great Vibes", cursive;
+    font-size:3.5rem;
+    color:#7d7d7d;
+    font-weight:normal;
+    white-space:nowrap;
+}
+
+
+.navbar ul,
+nav ul{
+    display:flex;
+    list-style:none;
+    gap:32px;
+}
+
+.navbar a,
+nav a{
+    text-decoration:none;
+    color:#7d7d7d;
+    font-size:18px;
+    font-weight:500;
+    transition:.3s;
+}
+
+.navbar a:hover,
+nav a:hover{
+    color:#555;
+}
+
+
+.contact-section{
+
+    background:#efd9cf;
+
+    min-height:calc(100vh - 80px);
+
+    padding:50px 40px;
+
+}
+
+.contact-container{
+
+    max-width:900px;
+
+    margin-left:40px;
+
+}
+
+
+#contactForm{
+
+    display:flex;
+    flex-direction:column;
+    gap:35px;
+
+}
+
+
+.name-row{
+
+    display:flex;
+    gap:15px;
+    width:100%;
+
+}
+
+.name-row .contact-card{
+
+    flex:1;
+
+}
+
+
+.contact-card{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:10px;
+
+}
+
+.contact-card label{
+
+    font-size:1.6rem;
+
+    color:#7a7a7a;
+
+}
+
+.contact-card input,
+.contact-card textarea{
+
+    width:100%;
+
+    border:none;
+
+    border-radius:8px;
+
+    background:#f3f3f3;
+
+    font-size:1.2rem;
+
+    font-family:"Cormorant Garamond", serif;
+
+    color:#555;
+
+}
+
+.contact-card input{
+
+    height:55px;
+
+    padding:0 20px;
+
+}
+
+.contact-card textarea{
+
+    min-height:250px;
+
+    padding:20px;
+
+    resize:vertical;
+
+    line-height:1.6;
+
+}
+
+.contact-card input:focus,
+.contact-card textarea:focus{
+
+    outline:none;
+
+    box-shadow:0 0 5px rgba(0,0,0,.15);
+
+}
+
+
+.send-btn{
+
+    width:130px;
+    height:55px;
+
+    border:none;
+    border-radius:30px;
+
+    background:#4b4b4b;
+    color:#ffffff;
+
+    font-family:"Cormorant Garamond", serif;
+    font-size:1.5rem;
+    font-weight:600;
+
+    cursor:pointer;
+
+    transition:.3s;
+
+}
+
+.send-btn:hover{
+
+    background:#333333;
+
+    transform:translateY(-2px);
+
+}
+
+.send-btn:active{
+
+    transform:translateY(0);
+
+}
+
+
+@media(max-width:1200px){
+
+    header{
+
+        height:auto;
+        justify-content:center;
+        padding:20px;
+
+    }
+
+    .header-container{
+
+        flex-direction:column;
+        justify-content:center;
+        gap:20px;
+
+    }
+
+    .navbar ul,
+    nav ul{
+
+        flex-wrap:wrap;
+        justify-content:center;
+        gap:15px;
+
+    }
+
+}
+
+
+@media(max-width:768px){
+
+    .logo{
+
+        font-size:3rem;
+
+    }
+
+    .contact-section{
+
+        padding:30px 20px;
+
+    }
+
+    .contact-container{
+
+        width:100%;
+        margin:0 auto;
+
+    }
+
+    .name-row{
+
+        flex-direction:column;
+        gap:20px;
+
+    }
+
+    .contact-card label{
+
+        font-size:1.4rem;
+
+    }
+
+    .contact-card input,
+    .contact-card textarea{
+
+        font-size:1rem;
+
+    }
+
+    .send-btn{
+
+        width:100%;
+
+    }
+
+}

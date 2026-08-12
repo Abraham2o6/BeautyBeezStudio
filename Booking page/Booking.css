@@ -1,0 +1,212 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Great+Vibes&display=swap');
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+html,
+body{
+    width:100%;
+    height:100%;
+    overflow:hidden;
+}
+
+body{
+    font-family:"Cormorant Garamond", serif;
+    background:#ffffff;
+    color:#707070;
+}
+
+
+header{
+    height:80px;
+    background:#ffffff;
+
+    display:flex;
+    justify-content:flex-end;
+    align-items:center;
+
+    padding-right:35px;
+}
+
+
+.navbar ul{
+    display:flex;
+    list-style:none;
+    gap:32px;
+}
+
+.navbar a{
+    text-decoration:none;
+    color:#7d7d7d;
+    font-size:18px;
+    font-weight:500;
+    transition:.3s;
+}
+
+.navbar a:hover{
+    color:#555;
+}
+
+
+.booking-section{
+    background:#efd9cf;
+    height:calc(100vh - 80px);
+
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+
+    padding:15px 20px;
+}
+
+.booking-title{
+    font-family:"Great Vibes", cursive;
+    font-size:4.5rem;
+    font-weight:normal;
+
+    color:#8c8c8c;
+
+    line-height:1;
+    margin-bottom:15px;
+}
+
+
+.booking-form{
+    width:100%;
+    max-width:700px;
+
+    display:flex;
+    flex-direction:column;
+
+    gap:15px;
+}
+
+.name-row{
+    display:flex;
+    gap:12px;
+}
+
+.name-row input{
+    flex:1;
+}
+
+
+.booking-form input,
+.booking-form select{
+    width:100%;
+    height:55px;
+
+    border:none;
+    border-radius:8px;
+
+    background:#f4f4f4;
+
+    padding:0 15px;
+
+    font-size:1.2rem;
+    font-family:"Cormorant Garamond", serif;
+
+    color:#666;
+}
+
+.booking-form input:focus,
+.booking-form select:focus{
+    outline:none;
+    box-shadow:0 0 5px rgba(0,0,0,0.15);
+}
+
+
+.booking-form select{
+    cursor:pointer;
+    appearance:none;
+
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23777' viewBox='0 0 16 16'%3E%3Cpath d='M1.5 5l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat:no-repeat;
+    background-position:right 15px center;
+    background-size:16px;
+}
+
+
+.booking-form input[type="date"]{
+    color:#777;
+}
+
+
+.submit-btn{
+    width:130px;
+    height:54px;
+
+    margin:12px auto 0;
+
+    border:none;
+    border-radius:30px;
+
+    background:#333;
+    color:#ffffff;
+
+    font-size:1.3rem;
+    font-weight:600;
+
+    cursor:pointer;
+    transition:.3s;
+}
+
+.submit-btn:hover{
+    background:#555;
+}
+
+
+@media (min-width:1600px){
+
+    .booking-title{
+        font-size:5rem;
+    }
+
+    .booking-form{
+        max-width:760px;
+    }
+}
+
+
+@media(max-width:768px){
+
+    html,
+    body{
+        height:auto;
+        overflow:auto;
+    }
+
+    header{
+        height:auto;
+        justify-content:center;
+        padding:20px;
+    }
+
+    .navbar ul{
+        flex-wrap:wrap;
+        justify-content:center;
+        gap:15px;
+    }
+
+    .booking-section{
+        height:auto;
+        min-height:calc(100vh - 80px);
+        padding:25px 20px 40px;
+    }
+
+    .booking-title{
+        font-size:3.5rem;
+    }
+
+    .name-row{
+        flex-direction:column;
+        gap:15px;
+    }
+
+    .booking-form{
+        max-width:100%;
+    }
+}

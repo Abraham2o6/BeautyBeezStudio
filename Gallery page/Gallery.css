@@ -1,0 +1,218 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Great+Vibes&display=swap');
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+html,
+body{
+    width:100%;
+    min-height:100%;
+}
+
+body{
+    font-family:"Cormorant Garamond", serif;
+    background:#f4f4f4;
+    color:#777;
+}
+
+
+header{
+    height:80px;
+    background:#ffffff;
+
+    display:flex;
+    align-items:center;
+}
+
+.header-container{
+    width:100%;
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    padding:0 35px;
+}
+
+
+.page-title{
+    font-family:"Great Vibes", cursive;
+    font-size:4rem;
+    font-weight:400;
+    color:#777;
+    white-space:nowrap;
+}
+
+
+.navbar ul,
+nav ul{
+    display:flex;
+    list-style:none;
+    gap:32px;
+}
+
+.navbar a,
+nav a{
+    text-decoration:none;
+    color:#7d7d7d;
+    font-size:18px;
+    font-weight:500;
+    white-space:nowrap;
+    transition:.3s;
+}
+
+.navbar a:hover,
+nav a:hover{
+    color:#555;
+}
+
+
+.gallery-section{
+    background:#efd9cf;
+    min-height:calc(100vh - 80px);
+    padding:50px 40px;
+}
+
+.gallery-container{
+    max-width:1200px;
+    margin:0 auto;
+
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+
+    justify-items:center;
+
+    column-gap:80px;
+    row-gap:60px;
+}
+
+
+.gallery-card{
+    width:260px;
+
+    display:block;
+
+    text-align:center;
+
+    text-decoration:none;
+    color:inherit;
+
+    cursor:pointer;
+
+    transition:.3s ease;
+}
+
+.gallery-card:hover{
+    transform:translateY(-6px);
+}
+
+.gallery-card img{
+    width:260px;
+    height:320px;
+
+    object-fit:cover;
+
+    display:block;
+    margin:0 auto;
+}
+
+.gallery-card h3{
+    margin-top:15px;
+
+    font-size:1.8rem;
+    font-weight:500;
+
+    color:#6f6f6f;
+
+    text-decoration:none;
+}
+
+.gallery-card,
+.gallery-card:link,
+.gallery-card:visited,
+.gallery-card:hover,
+.gallery-card:active{
+    text-decoration:none;
+    color:inherit;
+}
+
+
+@media (min-width:1600px){
+
+    .gallery-card{
+        width:290px;
+    }
+
+    .gallery-card img{
+        width:290px;
+        height:350px;
+    }
+
+}
+
+
+@media(max-width:1200px){
+
+    header{
+        height:auto;
+        padding:20px;
+    }
+
+    .header-container{
+        flex-direction:column;
+        justify-content:center;
+        align-items:center;
+        gap:20px;
+    }
+
+    .page-title{
+        font-size:3.2rem;
+        text-align:center;
+    }
+
+    .navbar ul,
+    nav ul{
+        flex-wrap:wrap;
+        justify-content:center;
+        gap:15px;
+    }
+
+    .gallery-container{
+        grid-template-columns:repeat(2, 1fr);
+        row-gap:50px;
+    }
+
+}
+
+
+@media(max-width:768px){
+
+    .gallery-section{
+        padding:40px 20px;
+    }
+
+    .page-title{
+        font-size:2.8rem;
+    }
+
+    .gallery-container{
+        grid-template-columns:1fr;
+    }
+
+    .gallery-card{
+        width:220px;
+    }
+
+    .gallery-card img{
+        width:220px;
+        height:280px;
+    }
+
+    .gallery-card h3{
+        font-size:1.4rem;
+    }
+
+}

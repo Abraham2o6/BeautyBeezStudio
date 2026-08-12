@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking | Beauty Beez Studio</title>
+    <link rel="stylesheet" href="booking.css">
+</head>
+<body>
+
+
+    <header>
+
+        <nav class="navbar">
+
+            <ul>
+
+                <li><a href="../Homepage/Homepage.html">HOME</a></li>
+                <li><a href="../Services & Pricing page/Services & Pricing.html">SERVICES & PRICING</a></li>
+                <li><a href="../Gallery page/Gallery.html">GALLERY</a></li>
+                <li><a href="../About me page/About me.html">ABOUT</a></li>
+                <li><a href="../Reviews page/Reviews.html">REVIEWS</a></li>
+                <li><a href="../Contact us page/Contact us.html">CONTACT</a></li>
+                <li><a href="../FAQ's page/FAQ'S.html">FAQ's</a></li>
+
+            </ul>
+
+        </nav>
+
+    </header>
+
+
+    <section class="booking-section">
+
+        <h1 class="booking-title">Booking</h1>
+
+
+        <form id="bookingForm" class="booking-form">
+
+            <div class="name-row">
+
+                <input
+                    type="text"
+                    id="firstName"
+                    name="firstName"
+                    placeholder="First name"
+                    required
+                >
+
+                <input
+                    type="text"
+                    id="lastName"
+                    name="lastName"
+                    placeholder="Last name"
+                    required
+                >
+
+            </div>
+
+            <input
+                type="tel"
+                id="phone"
+                name="phone"
+                placeholder="Phone"
+                required
+            >
+
+            <input
+                type="email"
+                id="email"
+                name="email"
+                placeholder="Email"
+                required
+            >
+
+
+            <select
+                id="service"
+                name="service"
+                required
+            >
+
+                <option value="" selected disabled>Service</option>
+
+
+                <option>BIAB Overlays</option>
+                <option>BIAB Extensions</option>
+                <option>BIAB Infills</option>
+                <option>BIAB with Gel Colour Finish</option>
+                <option>BIAB French Manicure</option>
+
+
+
+                <option>Gel Polish Manicure</option>
+                <option>Gel Extensions</option>
+                <option>French Gel Sets</option>
+                <option>Builder Gel Strengthening</option>
+                <option>Ombre Gel Nails</option>
+                <option>Gel Infills</option>
+
+
+                <option>Acrylic Infills</option>
+                <option>Acrylic Ombre Nails</option>
+                <option>French Acrylic Sets</option>
+                <option>Full Set Acrylic Extensions</option>
+
+
+                <option>Custom Shapes</option>
+                <option>3D Nail Art</option>
+                <option>Line &amp; Dots</option>
+                <option>French &amp; Reverse French Design</option>
+                <option>Chrome / Mirror Finishes</option>
+                <option>Glitter, Foil &amp; Shimmer Accents</option>
+                <option>Hand-Painted Art</option>
+                <option>Aura &amp; Ombre Blends</option>
+
+
+                <option>Basic Manicure</option>
+                <option>Gel Manicure</option>
+                <option>Spa Manicure</option>
+                <option>Dry / Russian Manicure</option>
+                <option>Men's Manicure</option>
+                <option>Express Mini Manicure</option>
+
+            </select>
+
+            <input
+                type="date"
+                id="date"
+                name="date"
+                required
+            >
+
+            <button
+                type="submit"
+                class="submit-btn"
+            >
+                Submit
+            </button>
+
+        </form>
+
+    </section>
+
+    <script src="booking.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,205 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Great+Vibes&display=swap');
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+html,
+body{
+    width:100%;
+    height:100%;
+    overflow:hidden;
+}
+
+body{
+    font-family:"Cormorant Garamond", serif;
+    background:#ffffff;
+    color:#707070;
+}
+
+
+header{
+    height:80px;
+    background:#ffffff;
+
+    display:flex;
+    justify-content:flex-end;
+    align-items:center;
+
+    padding-right:35px;
+}
+
+
+.navbar ul{
+    display:flex;
+    list-style:none;
+    gap:32px;
+}
+
+.navbar a{
+    text-decoration:none;
+    color:#7d7d7d;
+    font-size:18px;
+    font-weight:500;
+    transition:.3s;
+}
+
+.navbar a:hover{
+    color:#555;
+}
+
+
+.hero{
+    height:calc(100vh - 80px);
+
+    background:#efd9cf;
+
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+
+    padding:35px 30px 20px 30px;
+}
+
+
+.content-left{
+    width:58%;
+}
+
+.content-left h1{
+    font-family:"Great Vibes", cursive;
+    font-size:4.5rem;
+    font-weight:normal;
+
+    color:#8a8a8a;
+
+    line-height:1.25;
+
+    max-width:700px;
+
+    margin-bottom:15px;
+}
+
+
+.content-left h3{
+    font-size:1.9rem;
+    font-weight:600;
+
+    color:#666;
+
+    margin-bottom:10px;
+}
+
+.services-list{
+    padding-left:22px;
+}
+
+.services-list li{
+    font-size:1.3rem;
+    line-height:1.4;
+
+    margin-bottom:10px;
+}
+
+
+.content-right{
+    width:33%;
+
+    padding-top:95px;
+
+    display:flex;
+    flex-direction:column;
+    align-items:flex-start;
+}
+
+
+.content-right h2{
+    font-family:"Great Vibes", cursive;
+    font-size:3.7rem;
+    font-weight:normal;
+
+    color:#8a8a8a;
+
+    line-height:1.15;
+
+    margin-bottom:10px;
+}
+
+
+.btn{
+    background:#333;
+    color:#fff;
+
+    text-decoration:none;
+
+    padding:10px 24px;
+
+    border-radius:25px;
+
+    font-size:16px;
+    font-weight:600;
+
+    transition:.3s;
+}
+
+.btn:hover{
+    background:#555;
+}
+
+
+@media (min-width:1600px){
+
+    .content-left h1{
+        font-size:5rem;
+    }
+
+    .content-right h2{
+        font-size:4rem;
+    }
+}
+
+
+@media (max-width:768px){
+
+    html,
+    body{
+        overflow:auto;
+    }
+
+    header{
+        height:auto;
+        justify-content:center;
+        padding:20px;
+    }
+
+    .navbar ul{
+        flex-wrap:wrap;
+        justify-content:center;
+        gap:15px;
+    }
+
+    .hero{
+        height:auto;
+        flex-direction:column;
+        gap:40px;
+    }
+
+    .content-left,
+    .content-right{
+        width:100%;
+    }
+
+    .content-right{
+        padding-top:0;
+    }
+
+    .content-left h1{
+        font-size:44px;
+    }
+
+    .content-right h2{
+        font-size:30px;
+    }
+}

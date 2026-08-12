@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bridal Sets | Beauty Beez Studio</title>
+
+    <link rel="stylesheet" href="Bridal set gallery.css">
+</head>
+
+<body>
+
+<div class="gallery-viewer">
+
+
+    <a href="../Gallery page/Gallery.html" class="close-btn">
+        ×
+    </a>
+
+
+    <button class="nav-btn prev-btn" id="prevBtn">
+        &#9664;
+    </button>
+
+
+    <div class="image-wrapper">
+
+        <img
+            id="galleryImage"
+            src="Bridal sets.jpg"
+            alt="Bridal Set"
+        >
+
+        <p class="image-count">
+            <span id="currentImage">1</span> /
+            <span id="totalImages">5</span>
+        </p>
+
+    </div>
+
+
+    <button class="nav-btn next-btn" id="nextBtn">
+        &#9654;
+    </button>
+
+</div>
+
+<script>
+
+const images = [
+
+    "Bridal sets.jpg",
+    "Bridal set 2.jpg",
+    "Bridal set 3.jpg",
+    "Bridal set 4.jpg",
+    "Bridal set 5.jpg"
+
+];
+
+let current = 0;
+
+const image = document.getElementById("galleryImage");
+const currentNumber = document.getElementById("currentImage");
+const totalNumber = document.getElementById("totalImages");
+
+totalNumber.textContent = images.length;
+
+function updateImage(){
+
+    image.src = images[current];
+
+    currentNumber.textContent = current + 1;
+
+}
+
+document.getElementById("nextBtn").addEventListener("click", function(){
+
+    current++;
+
+    if(current >= images.length){
+
+        current = 0;
+
+    }
+
+    updateImage();
+
+});
+
+document.getElementById("prevBtn").addEventListener("click", function(){
+
+    current--;
+
+    if(current < 0){
+
+        current = images.length - 1;
+
+    }
+
+    updateImage();
+
+});
+
+</script>
+
+</body>
+</html>

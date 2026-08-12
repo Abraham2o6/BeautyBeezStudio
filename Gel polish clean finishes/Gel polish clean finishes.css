@@ -1,0 +1,137 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&display=swap');
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+html,
+body{
+    width:100%;
+    height:100%;
+}
+
+body{
+    font-family:"Cormorant Garamond", serif;
+    background:#000;
+    overflow:hidden;
+}
+
+
+.gallery-viewer{
+
+    width:100%;
+    height:100vh;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:90px;
+
+    position:relative;
+
+    background:#000;
+}
+
+.close-btn{
+
+    position:absolute;
+
+    top:25px;
+    left:35px;
+
+    text-decoration:none;
+
+    color:#ffffff;
+
+    font-size:55px;
+    font-weight:bold;
+
+    transition:.3s;
+}
+
+.close-btn:hover{
+
+    color:#d4d4d4;
+}
+
+
+.image-wrapper{
+
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+}
+
+.image-wrapper img{
+
+    width:380px;
+    max-height:700px;
+
+    object-fit:cover;
+}
+
+.image-count{
+
+    color:#ffffff;
+
+    margin-top:20px;
+
+    font-family:Arial, sans-serif;
+    font-size:22px;
+    font-weight:bold;
+}
+
+
+.nav-btn{
+
+    border:none;
+    background:none;
+
+    color:#ffffff;
+
+    font-size:95px;
+
+    cursor:pointer;
+
+    transition:.3s;
+}
+
+.nav-btn:hover{
+
+    color:#bdbdbd;
+
+    transform:scale(1.08);
+}
+
+
+@media(max-width:900px){
+
+    .gallery-viewer{
+
+        gap:20px;
+    }
+
+    .image-wrapper img{
+
+        width:70vw;
+    }
+
+    .nav-btn{
+
+        font-size:60px;
+    }
+
+    .close-btn{
+
+        font-size:42px;
+        left:20px;
+    }
+
+    .image-count{
+
+        font-size:18px;
+    }
+
+}
