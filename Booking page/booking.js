@@ -7,41 +7,62 @@ form.addEventListener("submit", async (event) => {
     console.log("Submit button clicked!");
 
     const booking = {
-        firstName: document.getElementById("firstName").value,
-        lastName: document.getElementById("lastName").value,
-        phone: document.getElementById("phone").value,
-        email: document.getElementById("email").value,
+        firstName: document.getElementById("firstName").value.trim(),
+        lastName: document.getElementById("lastName").value.trim(),
+        phone: document.getElementById("phone").value.trim(),
+        email: document.getElementById("email").value.trim(),
         service: document.getElementById("service").value,
         date: document.getElementById("date").value
     };
 
-    console.log("Sending:", booking);
+    console.log("Sending booking:", booking);
 
     try {
 
-        const response = await fetch("http://127.0.0.1:3000/book", {
+        const response = await fetch("/book", {
+
             method: "POST",
+
             headers: {
                 "Content-Type": "application/json"
             },
+
             body: JSON.stringify(booking)
+
         });
 
-        console.log("Status:", response.status);
+        console.log("Server status:", response.status);
 
         const result = await response.json();
 
-        console.log(result);
+        console.log("Server response:", result);
 
-        alert(result.message);
+        if (response.ok && result.success) {
 
-        form.reset();
+            alert(
+                result.message ||
+                "Booking submitted successfully!"
+            );
+
+            form.reset();
+
+        } else {
+
+            alert(
+                result.message ||
+                "There was a problem submitting your booking."
+            );
+
+        }
 
     } catch (error) {
 
-        console.error("Fetch failed:", error);
+        console.error("Booking request failed:", error);
 
-        alert("Unable to submit booking.");
+        alert(
+            "Unable to submit your booking. " +
+            "Please check your internet connection and try again."
+        );
 
     }
 
